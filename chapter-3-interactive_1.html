@@ -1,0 +1,1784 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>บทที่ 3 · หัวใจสำคัญก้าวสู่ 0.01% ของผู้เล่น — Interactive Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Prompt:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a0a0a;
+    --bg-2: #121212;
+    --bg-3: #1a1a1a;
+    --panel: #161616;
+    --panel-hi: #1e1e1e;
+    --ink: #f5f5f5;
+    --ink-dim: #a8a8a8;
+    --ink-mute: #6a6a6a;
+    --accent: #e63946;
+    --accent-2: #ff4d5e;
+    --accent-soft: rgba(230,57,70,0.12);
+    --accent-glow: rgba(230,57,70,0.3);
+    --line: rgba(255,255,255,0.08);
+    --line-strong: rgba(255,255,255,0.16);
+    --grid: rgba(255,255,255,0.025);
+    --success: #4ade80;
+    --success-soft: rgba(74,222,128,0.1);
+    --warn: #fbbf24;
+    --info: #60a5fa;
+    --info-soft: rgba(96,165,250,0.1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'IBM Plex Sans Thai','Prompt',sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.7;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:
+      linear-gradient(var(--grid) 1px,transparent 1px),
+      linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:48px 48px;
+  }
+  body::after{
+    content:'';position:fixed;inset:0;z-index:1;pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+    opacity:0.04;mix-blend-mode:overlay;
+  }
+  main,header,nav,section,footer{position:relative;z-index:2}
+
+  /* TOPBAR */
+  .topbar{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    background:rgba(10,10,10,0.9);backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar-inner{
+    max-width:1400px;margin:0 auto;padding:14px 32px;
+    display:flex;align-items:center;justify-content:space-between;gap:24px;
+  }
+  .logo{
+    font-family:'Bebas Neue',sans-serif;letter-spacing:0.08em;
+    font-size:20px;color:var(--ink);text-decoration:none;
+    display:flex;align-items:center;gap:10px;
+  }
+  .logo-dot{width:10px;height:10px;background:var(--accent);border-radius:1px;transform:rotate(45deg)}
+  .topbar nav{display:flex;gap:4px;flex-wrap:wrap}
+  .topbar nav a{
+    font-size:11px;color:var(--ink-dim);text-decoration:none;
+    padding:8px 10px;border-radius:3px;transition:all 0.2s;
+    font-weight:600;letter-spacing:0.02em;font-family:'JetBrains Mono',monospace;
+  }
+  .topbar nav a:hover{color:var(--accent);background:var(--accent-soft)}
+  .progress-bar{
+    position:absolute;bottom:0;left:0;height:2px;width:0%;
+    background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    transition:width 0.1s;
+  }
+
+  /* HERO */
+  .hero{
+    min-height:95vh;display:flex;align-items:center;
+    padding:140px 32px 100px;position:relative;overflow:hidden;
+  }
+  .hero-bg-number{
+    position:absolute;font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(400px,60vw,900px);line-height:0.8;
+    color:rgba(230,57,70,0.04);font-weight:900;
+    top:5%;right:-5%;letter-spacing:-0.04em;
+    user-select:none;pointer-events:none;
+  }
+  .hero-inner{max-width:1300px;margin:0 auto;width:100%;position:relative}
+  .hero-tag{
+    display:inline-flex;align-items:center;gap:10px;
+    font-family:'JetBrains Mono',monospace;font-size:11px;
+    color:var(--accent);letter-spacing:0.2em;text-transform:uppercase;
+    padding:10px 16px;border:1px solid var(--accent);border-radius:2px;
+    margin-bottom:32px;
+  }
+  .hero-tag::before{
+    content:'';width:6px;height:6px;background:var(--accent);
+    border-radius:50%;animation:pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+  .hero h1{
+    font-family:'Prompt',sans-serif;font-weight:900;
+    font-size:clamp(48px,7vw,110px);line-height:0.95;
+    letter-spacing:-0.03em;margin-bottom:32px;max-width:1100px;
+  }
+  .hero h1 .red{color:var(--accent);font-style:italic}
+  .hero h1 .small{font-size:0.4em;font-weight:300;color:var(--ink-dim);display:block;margin-top:24px;letter-spacing:0;font-style:normal}
+  .hero-sub{
+    font-size:19px;color:var(--ink-dim);max-width:720px;
+    margin-bottom:48px;line-height:1.7;
+  }
+  .hero-sub strong{color:var(--ink);font-weight:600}
+  .hero-highlights{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+    border:1px solid var(--line-strong);border-radius:4px;overflow:hidden;
+    max-width:900px;
+  }
+  .hi-item{
+    padding:24px 20px;border-right:1px solid var(--line);
+    background:var(--panel);
+  }
+  .hi-item:last-child{border-right:none}
+  .hi-num{
+    font-family:'Bebas Neue',sans-serif;font-size:40px;
+    color:var(--accent);line-height:1;
+  }
+  .hi-label{font-size:11px;color:var(--ink-mute);letter-spacing:0.1em;text-transform:uppercase;margin-top:8px;font-family:'JetBrains Mono',monospace}
+
+  /* SECTIONS */
+  section{
+    padding:100px 32px;border-top:1px solid var(--line);
+    position:relative;
+  }
+  .container{max-width:1200px;margin:0 auto}
+  .container-sm{max-width:900px;margin:0 auto}
+
+  .section-label{
+    display:inline-block;font-family:'JetBrains Mono',monospace;
+    font-size:11px;color:var(--accent);letter-spacing:0.2em;
+    text-transform:uppercase;margin-bottom:16px;
+    padding:6px 12px;background:var(--accent-soft);border-radius:2px;
+  }
+  .section-title{
+    font-family:'Prompt',sans-serif;font-weight:800;
+    font-size:clamp(32px,5vw,52px);line-height:1.05;
+    letter-spacing:-0.02em;margin-bottom:24px;
+  }
+  .section-lead{
+    font-size:18px;color:var(--ink-dim);max-width:760px;
+    line-height:1.7;margin-bottom:56px;
+  }
+
+  /* === ASSESSMENT QUIZ === */
+  .assessment{
+    background:linear-gradient(135deg,var(--panel),rgba(230,57,70,0.04));
+    border:1px solid var(--line-strong);border-radius:6px;
+    padding:48px;margin:40px 0;position:relative;overflow:hidden;
+  }
+  .assessment::before{
+    content:'';position:absolute;top:0;left:0;width:4px;height:100%;
+    background:linear-gradient(180deg,var(--accent),transparent);
+  }
+  .ass-header{display:flex;align-items:center;gap:16px;margin-bottom:32px;flex-wrap:wrap}
+  .ass-step{
+    font-family:'JetBrains Mono',monospace;font-size:12px;
+    color:var(--ink-mute);letter-spacing:0.15em;
+  }
+  .ass-step .cur{color:var(--accent);font-weight:700}
+  .ass-progress{
+    flex:1;height:3px;background:var(--line);border-radius:2px;
+    overflow:hidden;min-width:200px;
+  }
+  .ass-progress-bar{
+    height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    transition:width 0.4s cubic-bezier(0.2,0.8,0.2,1);width:0%;
+  }
+  .ass-q{
+    font-size:22px;font-weight:600;line-height:1.5;margin-bottom:32px;
+  }
+  .ass-options{display:grid;gap:14px;margin-bottom:24px}
+  .ass-opt{
+    background:var(--bg-2);border:1px solid var(--line);
+    padding:20px 24px;border-radius:4px;text-align:left;
+    color:var(--ink);font-size:15px;cursor:pointer;
+    transition:all 0.2s;font-family:inherit;display:flex;align-items:center;gap:16px;
+  }
+  .ass-opt:hover{border-color:var(--accent);background:var(--accent-soft);transform:translateX(4px)}
+  .ass-opt.selected{border-color:var(--accent);background:var(--accent-soft)}
+  .ass-opt-letter{
+    width:32px;height:32px;border:1px solid var(--line-strong);
+    border-radius:3px;display:flex;align-items:center;justify-content:center;
+    font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;
+    color:var(--ink-dim);flex-shrink:0;
+  }
+  .ass-opt.selected .ass-opt-letter{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .ass-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:24px}
+  .btn{
+    padding:14px 28px;border-radius:3px;font-size:14px;font-weight:600;
+    cursor:pointer;transition:all 0.2s;border:none;font-family:inherit;
+    letter-spacing:0.02em;
+  }
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-primary:hover:not(:disabled){background:var(--accent-2);transform:translateY(-2px)}
+  .btn-primary:disabled{opacity:0.3;cursor:not-allowed}
+  .btn-ghost{background:transparent;color:var(--ink-dim);border:1px solid var(--line-strong)}
+  .btn-ghost:hover:not(:disabled){color:var(--ink);border-color:var(--accent)}
+  .btn-ghost:disabled{opacity:0.3;cursor:not-allowed}
+
+  .ass-result{display:none;text-align:center;padding:32px 0}
+  .ass-result.show{display:block}
+  .result-badge{
+    display:inline-block;padding:8px 20px;border-radius:20px;
+    font-family:'JetBrains Mono',monospace;font-size:12px;
+    letter-spacing:0.15em;text-transform:uppercase;margin-bottom:24px;
+  }
+  .result-badge.lvl1{background:rgba(96,165,250,0.15);color:var(--info);border:1px solid var(--info)}
+  .result-badge.lvl2{background:rgba(251,191,36,0.15);color:var(--warn);border:1px solid var(--warn)}
+  .result-badge.lvl3{background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent)}
+  .result-title{
+    font-family:'Prompt',sans-serif;font-weight:800;
+    font-size:40px;line-height:1.1;margin-bottom:16px;letter-spacing:-0.02em;
+  }
+  .result-desc{font-size:16px;color:var(--ink-dim);max-width:600px;margin:0 auto 32px;line-height:1.7}
+  .result-cta-group{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+  /* === FORMULA SECTION === */
+  .formula-big{
+    background:var(--panel);border:1px solid var(--line-strong);
+    padding:64px 48px;border-radius:6px;margin:40px 0;text-align:center;
+    position:relative;overflow:hidden;
+  }
+  .formula-big::after{
+    content:'';position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,var(--accent),transparent);
+  }
+  .formula-line{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(32px,5.5vw,64px);line-height:1.2;letter-spacing:0.02em;
+    display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:16px;
+  }
+  .formula-piece{
+    padding:12px 24px;border:1px solid var(--line-strong);border-radius:4px;
+    background:var(--bg-2);transition:all 0.3s;cursor:default;
+  }
+  .formula-piece:hover{border-color:var(--accent);background:var(--accent-soft);transform:translateY(-4px)}
+  .formula-op{color:var(--accent);font-size:1.2em}
+  .formula-label{
+    font-family:'JetBrains Mono',monospace;font-size:12px;
+    color:var(--ink-mute);letter-spacing:0.2em;text-transform:uppercase;
+    margin-top:24px;
+  }
+
+  /* === LEVEL TABS === */
+  .level-tabs{
+    display:flex;gap:2px;background:var(--line);padding:2px;
+    border-radius:4px;margin-bottom:32px;overflow-x:auto;
+  }
+  .level-tab{
+    flex:1;padding:20px 24px;background:var(--panel);border:none;
+    color:var(--ink-dim);cursor:pointer;transition:all 0.2s;
+    font-family:inherit;font-size:14px;font-weight:600;text-align:left;
+    border-radius:3px;min-width:240px;
+  }
+  .level-tab:hover{color:var(--ink)}
+  .level-tab.active{background:var(--accent);color:#fff}
+  .level-tab-num{
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.2em;
+    display:block;margin-bottom:6px;opacity:0.7;
+  }
+  .level-tab-name{font-size:16px;font-weight:700;letter-spacing:-0.01em}
+
+  .level-panel{display:none;animation:fadeIn 0.5s ease}
+  .level-panel.active{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+  .level-intro{
+    background:var(--panel);border:1px solid var(--line);
+    border-left:4px solid var(--accent);
+    padding:32px 40px;border-radius:4px;margin-bottom:32px;
+  }
+  .level-intro h3{font-size:24px;margin-bottom:12px;line-height:1.3}
+  .level-intro p{color:var(--ink-dim);font-size:16px;line-height:1.7}
+  .level-intro p strong{color:var(--ink)}
+
+  .skill-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:32px}
+  .skill-item{
+    background:var(--panel);border:1px solid var(--line);
+    padding:24px;border-radius:4px;transition:all 0.3s;
+  }
+  .skill-item:hover{border-color:var(--line-strong);transform:translateY(-2px)}
+  .skill-item-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+  .skill-badge{
+    font-family:'JetBrains Mono',monospace;font-size:10px;
+    color:var(--accent);letter-spacing:0.15em;padding:3px 10px;
+    border:1px solid var(--accent);border-radius:2px;
+  }
+  .skill-item h4{font-size:17px;font-weight:700;letter-spacing:-0.01em}
+  .skill-item p{color:var(--ink-dim);font-size:14px;line-height:1.7}
+
+  /* === POKER CALCULATOR === */
+  .poker-calc{
+    background:linear-gradient(135deg,var(--panel),#0f1419);
+    border:1px solid var(--line-strong);border-radius:6px;
+    padding:48px;margin:40px 0;
+  }
+  .calc-scenario{
+    background:var(--bg-2);border:1px solid var(--line);
+    padding:24px 28px;border-radius:4px;margin-bottom:32px;
+  }
+  .calc-scenario-label{
+    font-family:'JetBrains Mono',monospace;font-size:11px;
+    color:var(--ink-mute);letter-spacing:0.2em;text-transform:uppercase;
+    margin-bottom:10px;
+  }
+  .calc-scenario h4{font-size:18px;margin-bottom:8px;line-height:1.5}
+  .calc-scenario p{color:var(--ink-dim);font-size:14px;line-height:1.7}
+
+  .card-visual{
+    display:flex;gap:12px;flex-wrap:wrap;justify-content:center;
+    margin:28px 0;padding:20px;background:var(--bg-2);
+    border:1px solid var(--line);border-radius:4px;
+  }
+  .playing-card{
+    width:72px;height:100px;background:#fff;border-radius:6px;
+    display:flex;flex-direction:column;padding:8px 10px;
+    font-family:'Bebas Neue',sans-serif;font-size:22px;
+    color:#000;box-shadow:0 4px 12px rgba(0,0,0,0.3);
+    position:relative;flex-shrink:0;
+  }
+  .playing-card.face-down{
+    background:linear-gradient(135deg,#7a1d27,#c92b37);
+    background-image:repeating-linear-gradient(45deg,rgba(255,255,255,0.08) 0 2px,transparent 2px 8px);
+    color:transparent;
+  }
+  .playing-card.heart,.playing-card.diamond{color:#e63946}
+  .playing-card .suit{font-size:14px;line-height:1}
+  .playing-card .rank{font-size:20px;font-weight:700;line-height:1}
+  .playing-card .center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:28px}
+
+  .calc-controls{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;
+  }
+  .calc-control{
+    background:var(--bg-2);border:1px solid var(--line);
+    padding:20px;border-radius:4px;
+  }
+  .calc-control label{
+    display:block;font-family:'JetBrains Mono',monospace;
+    font-size:11px;color:var(--ink-mute);letter-spacing:0.15em;
+    text-transform:uppercase;margin-bottom:10px;
+  }
+  .calc-control .slider-row{display:flex;align-items:center;gap:12px}
+  .calc-control input[type=range]{
+    flex:1;-webkit-appearance:none;appearance:none;
+    height:4px;background:var(--line-strong);border-radius:2px;outline:none;
+  }
+  .calc-control input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;appearance:none;width:18px;height:18px;
+    background:var(--accent);border-radius:50%;cursor:pointer;
+    box-shadow:0 0 0 3px var(--accent-soft);
+  }
+  .calc-control input[type=range]::-moz-range-thumb{
+    width:18px;height:18px;background:var(--accent);
+    border:none;border-radius:50%;cursor:pointer;
+  }
+  .calc-control .val{
+    font-family:'Bebas Neue',sans-serif;font-size:28px;
+    color:var(--accent);min-width:40px;text-align:right;
+  }
+
+  .calc-output{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:2px;
+    background:var(--line);padding:1px;border-radius:4px;overflow:hidden;
+    margin-top:24px;
+  }
+  .calc-out-item{
+    background:var(--bg-2);padding:28px 20px;text-align:center;
+  }
+  .calc-out-big{
+    font-family:'Bebas Neue',sans-serif;font-size:56px;line-height:1;
+  }
+  .calc-out-big.red{color:var(--accent)}
+  .calc-out-big.green{color:var(--success)}
+  .calc-out-big.blue{color:var(--info)}
+  .calc-out-label{
+    font-size:12px;color:var(--ink-dim);letter-spacing:0.08em;
+    text-transform:uppercase;margin-top:8px;font-family:'JetBrains Mono',monospace;
+  }
+  .calc-explain{
+    margin-top:24px;padding:20px 24px;background:var(--bg-2);
+    border-left:3px solid var(--accent);border-radius:3px;
+    font-size:14px;color:var(--ink-dim);line-height:1.8;
+  }
+  .calc-explain code{
+    background:var(--bg-3);color:var(--accent);padding:2px 8px;
+    border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:13px;
+  }
+
+  /* === SCHEDULE PICKER === */
+  .schedule-picker{
+    background:var(--panel);border:1px solid var(--line-strong);
+    border-radius:6px;padding:40px;margin:40px 0;
+  }
+  .schedule-tabs{
+    display:flex;gap:8px;margin-bottom:32px;flex-wrap:wrap;
+  }
+  .sched-tab{
+    background:var(--bg-2);border:1px solid var(--line);
+    padding:12px 20px;border-radius:3px;cursor:pointer;
+    color:var(--ink-dim);font-family:inherit;font-size:13px;font-weight:600;
+    transition:all 0.2s;letter-spacing:0.02em;
+  }
+  .sched-tab:hover{color:var(--ink);border-color:var(--accent)}
+  .sched-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .sched-content{display:none;animation:fadeIn 0.4s ease}
+  .sched-content.active{display:block}
+
+  .schedule-table{
+    width:100%;border-collapse:collapse;background:var(--bg-2);
+    border:1px solid var(--line);border-radius:4px;overflow:hidden;
+    font-size:13px;
+  }
+  .schedule-table th,.schedule-table td{
+    padding:14px 12px;text-align:left;border-bottom:1px solid var(--line);
+    border-right:1px solid var(--line);vertical-align:middle;
+  }
+  .schedule-table th{
+    background:var(--bg-3);font-family:'JetBrains Mono',monospace;
+    font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+    color:var(--ink-dim);font-weight:600;
+  }
+  .schedule-table td.day{
+    background:rgba(230,57,70,0.05);font-weight:700;color:var(--accent);
+    font-family:'JetBrains Mono',monospace;font-size:11px;
+    letter-spacing:0.15em;text-transform:uppercase;width:70px;text-align:center;
+  }
+  .schedule-table td:last-child,.schedule-table th:last-child{border-right:none}
+  .schedule-table tr:last-child td{border-bottom:none}
+  .schedule-table tr:hover td:not(.day){background:rgba(255,255,255,0.02)}
+  .sched-cell{display:flex;align-items:center;gap:8px;font-size:13px}
+  .sched-icon{font-size:16px;flex-shrink:0}
+  .sched-rest{color:var(--ink-mute);font-style:italic}
+
+  /* Legend */
+  .sched-legend{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:12px;margin-top:24px;
+  }
+  .leg-item{
+    display:flex;align-items:center;gap:12px;
+    padding:12px 14px;background:var(--bg-2);
+    border:1px solid var(--line);border-radius:3px;font-size:12px;
+  }
+  .leg-icon{font-size:18px;flex-shrink:0}
+  .leg-text{color:var(--ink-dim);line-height:1.4}
+  .leg-text strong{color:var(--ink);display:block;font-size:13px}
+
+  /* === CHECKLIST === */
+  .checklist-box{
+    background:var(--panel);border:1px solid var(--line-strong);
+    border-radius:6px;padding:40px;margin:40px 0;
+  }
+  .checklist-head{
+    display:flex;justify-content:space-between;align-items:center;
+    margin-bottom:24px;flex-wrap:wrap;gap:16px;
+  }
+  .checklist-progress{
+    display:flex;align-items:center;gap:12px;
+    font-family:'JetBrains Mono',monospace;font-size:13px;
+  }
+  .check-count{
+    font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--accent);
+    line-height:1;
+  }
+  .check-bar{
+    width:200px;height:6px;background:var(--line);border-radius:3px;overflow:hidden;
+  }
+  .check-bar-fill{
+    height:100%;background:linear-gradient(90deg,var(--accent),var(--success));
+    transition:width 0.4s;width:0%;
+  }
+  .checklist-items{display:grid;gap:10px}
+  .check-item{
+    display:flex;align-items:center;gap:16px;padding:18px 20px;
+    background:var(--bg-2);border:1px solid var(--line);border-radius:4px;
+    cursor:pointer;transition:all 0.2s;
+  }
+  .check-item:hover{border-color:var(--line-strong);background:var(--bg-3)}
+  .check-item.checked{border-color:var(--success);background:var(--success-soft)}
+  .check-item.checked .check-label{text-decoration:line-through;color:var(--ink-mute)}
+  .check-box{
+    width:24px;height:24px;border:2px solid var(--line-strong);
+    border-radius:4px;display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;transition:all 0.2s;
+  }
+  .check-item.checked .check-box{background:var(--success);border-color:var(--success)}
+  .check-box svg{opacity:0;transition:opacity 0.2s;color:#000}
+  .check-item.checked .check-box svg{opacity:1}
+  .check-label{font-size:15px;color:var(--ink);line-height:1.5;flex:1}
+  .check-tag{
+    font-family:'JetBrains Mono',monospace;font-size:10px;
+    padding:3px 8px;border-radius:2px;letter-spacing:0.1em;
+    text-transform:uppercase;font-weight:600;flex-shrink:0;
+  }
+  .check-tag.skill{background:var(--accent-soft);color:var(--accent)}
+  .check-tag.mind{background:var(--info-soft);color:var(--info)}
+  .check-tag.know{background:rgba(251,191,36,0.12);color:var(--warn)}
+
+  /* === COMPARISON TABLE === */
+  .compare-table{
+    width:100%;border-collapse:collapse;margin:32px 0;
+    background:var(--panel);border:1px solid var(--line-strong);
+    border-radius:6px;overflow:hidden;
+  }
+  .compare-table th,.compare-table td{
+    padding:18px 20px;text-align:left;border-bottom:1px solid var(--line);
+    vertical-align:top;
+  }
+  .compare-table th{
+    background:var(--bg-3);font-family:'JetBrains Mono',monospace;
+    font-size:11px;letter-spacing:0.15em;text-transform:uppercase;
+    color:var(--ink-dim);font-weight:600;
+  }
+  .compare-table th:first-child{color:var(--accent);font-size:13px}
+  .compare-table td{font-size:14px;color:var(--ink-dim);line-height:1.7}
+  .compare-table td:first-child{color:var(--ink);font-weight:600}
+  .compare-table tr:last-child td{border-bottom:none}
+  .compare-table tr:hover{background:rgba(255,255,255,0.02)}
+
+  /* === GAME SENSE BUILDER === */
+  .gs-builder{
+    background:var(--panel);border:1px solid var(--line-strong);
+    border-radius:6px;padding:40px;margin:40px 0;
+  }
+  .gs-question{
+    font-size:18px;font-weight:600;margin-bottom:20px;line-height:1.6;
+  }
+  .gs-answers{display:grid;gap:10px;margin-bottom:16px}
+  .gs-answer{
+    background:var(--bg-2);border:1px solid var(--line);
+    padding:18px 24px;border-radius:4px;cursor:pointer;
+    color:var(--ink);transition:all 0.2s;font-family:inherit;
+    font-size:15px;text-align:left;line-height:1.6;
+  }
+  .gs-answer:hover:not(:disabled){border-color:var(--accent);background:var(--accent-soft)}
+  .gs-answer.correct{background:var(--success-soft);border-color:var(--success)}
+  .gs-answer.wrong{background:rgba(230,57,70,0.08);border-color:var(--accent);opacity:0.7}
+  .gs-answer:disabled{cursor:not-allowed}
+  .gs-feedback{
+    margin-top:20px;padding:20px 24px;background:var(--bg-2);
+    border-radius:4px;font-size:14px;color:var(--ink-dim);line-height:1.8;
+    display:none;border-left:3px solid var(--success);
+  }
+  .gs-feedback.show{display:block}
+  .gs-feedback strong{color:var(--ink)}
+  .gs-next{margin-top:16px;text-align:right}
+
+  /* === QUOTE BLOCK === */
+  .quote-big{
+    background:linear-gradient(135deg,var(--panel),rgba(230,57,70,0.04));
+    border-left:4px solid var(--accent);
+    padding:48px 56px;margin:56px 0;border-radius:0 4px 4px 0;
+    position:relative;
+  }
+  .quote-big::before{
+    content:'"';position:absolute;top:0;left:24px;
+    font-family:'Bebas Neue',sans-serif;font-size:140px;color:var(--accent);
+    line-height:1;opacity:0.2;pointer-events:none;
+  }
+  .quote-big p{
+    font-size:24px;line-height:1.5;font-style:italic;
+    color:var(--ink);margin-bottom:16px;position:relative;z-index:1;
+  }
+  .quote-author{
+    font-family:'JetBrains Mono',monospace;font-size:12px;
+    color:var(--ink-mute);letter-spacing:0.15em;
+  }
+
+  /* === GROWTH CHART === */
+  .growth-demo{
+    background:var(--panel);border:1px solid var(--line-strong);
+    border-radius:6px;padding:40px;margin:40px 0;
+  }
+  .growth-chart{
+    position:relative;width:100%;height:320px;
+    border-left:2px solid var(--line-strong);
+    border-bottom:2px solid var(--line-strong);
+    padding:20px;margin-bottom:24px;
+  }
+  .growth-line{
+    position:absolute;width:100%;height:100%;top:0;left:0;
+  }
+  .growth-axis-y{
+    position:absolute;top:-20px;left:-60px;
+    font-family:'JetBrains Mono',monospace;font-size:11px;
+    color:var(--ink-mute);letter-spacing:0.1em;text-transform:uppercase;
+    transform:rotate(-90deg);transform-origin:right top;
+  }
+  .growth-axis-x{
+    position:absolute;bottom:-28px;right:0;
+    font-family:'JetBrains Mono',monospace;font-size:11px;
+    color:var(--ink-mute);letter-spacing:0.1em;text-transform:uppercase;
+  }
+  .growth-legend{
+    display:flex;gap:24px;flex-wrap:wrap;margin-top:40px;
+  }
+  .growth-leg{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-dim)}
+  .growth-leg-color{width:24px;height:3px;border-radius:2px}
+
+  /* === CTA FINAL === */
+  .final-cta{
+    background:linear-gradient(135deg,var(--accent),#c92b37);
+    padding:64px 48px;border-radius:6px;margin:80px 0 0;
+    position:relative;overflow:hidden;text-align:center;
+  }
+  .final-cta::before{
+    content:'';position:absolute;top:0;right:0;width:50%;height:100%;
+    background-image:repeating-linear-gradient(45deg,rgba(255,255,255,0.04) 0 2px,transparent 2px 20px);
+    pointer-events:none;
+  }
+  .final-cta-label{
+    font-family:'JetBrains Mono',monospace;font-size:12px;
+    color:rgba(255,255,255,0.8);letter-spacing:0.25em;text-transform:uppercase;
+    margin-bottom:20px;position:relative;
+  }
+  .final-cta h2{
+    font-family:'Prompt',sans-serif;font-weight:900;
+    font-size:clamp(36px,5vw,56px);line-height:1.1;
+    letter-spacing:-0.02em;margin-bottom:20px;color:#fff;position:relative;
+  }
+  .final-cta p{
+    font-size:18px;line-height:1.7;color:rgba(255,255,255,0.95);
+    max-width:720px;margin:0 auto 32px;position:relative;
+  }
+  .final-cta .btn-group{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative}
+  .btn-white{background:#fff;color:var(--accent);font-weight:700}
+  .btn-white:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(0,0,0,0.3)}
+  .btn-outline-white{
+    background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.3);
+  }
+  .btn-outline-white:hover{background:rgba(255,255,255,0.1);border-color:#fff}
+
+  /* Reveal animation */
+  .reveal{opacity:0;transform:translateY(30px);transition:all 0.8s cubic-bezier(0.2,0.8,0.2,1)}
+  .reveal.in{opacity:1;transform:none}
+
+  /* Responsive */
+  @media (max-width: 900px){
+    .topbar nav{display:none}
+    .hero{padding:120px 20px 60px}
+    section{padding:60px 20px}
+    .assessment,.poker-calc,.schedule-picker,.checklist-box,.gs-builder,.growth-demo,.formula-big{padding:28px 20px}
+    .hero-highlights{grid-template-columns:repeat(2,1fr)}
+    .hi-item:nth-child(2){border-right:none}
+    .hi-item:nth-child(1),.hi-item:nth-child(2){border-bottom:1px solid var(--line)}
+    .skill-grid{grid-template-columns:1fr}
+    .calc-controls{grid-template-columns:1fr}
+    .calc-output{grid-template-columns:1fr}
+    .level-tabs{flex-direction:column}
+    .level-tab{min-width:0}
+    .quote-big{padding:32px 28px}
+    .quote-big p{font-size:18px}
+    .final-cta{padding:40px 24px}
+    .schedule-table{font-size:11px}
+    .schedule-table th,.schedule-table td{padding:10px 6px}
+    .playing-card{width:56px;height:80px}
+  }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="#top" class="logo"><span class="logo-dot"></span>CHAPTER · 03</a>
+    <nav>
+      <a href="#assess">ประเมิน</a>
+      <a href="#formula">สูตรหลัก</a>
+      <a href="#levels">3 ระดับ</a>
+      <a href="#poker">คำนวณโป๊กเกอร์</a>
+      <a href="#schedule">ตารางฝึก</a>
+      <a href="#checklist">Checklist</a>
+      <a href="#grit">Grit</a>
+    </nav>
+  </div>
+  <div class="progress-bar" id="progressBar"></div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-bg-number">03</div>
+  <div class="hero-inner">
+    <div class="hero-tag">Chapter 03 · Interactive Edition</div>
+    <h1>
+      หัวใจสำคัญ<br>
+      ก้าวสู่ <span class="red">0.01%</span><br>
+      ของผู้เล่นทั้งหมด
+      <span class="small">บทที่เปลี่ยนวิธีคิดของคุณต่อการเล่นเกมตลอดกาล — ครบทั้งทฤษฎี เครื่องมือคำนวณ ตารางฝึก และ checklist ที่ใช้ได้ทันที</span>
+    </h1>
+    <p class="hero-sub">
+      "ผู้เล่นทั่วไป" กับ "ผู้เล่นระดับสูง" ไม่ได้ต่างกันที่<strong>เวลาที่ทุ่มเทลงไป</strong> แต่ต่างกันที่ <strong>วิธีที่พวกเขาฝึก</strong> บทนี้จะเปิดเผยทุกอย่างที่คุณต้องรู้ พร้อมเครื่องมือให้ลงมือทำทันที
+    </p>
+    <div class="hero-highlights">
+      <div class="hi-item"><div class="hi-num">3</div><div class="hi-label">หัวใจหลัก</div></div>
+      <div class="hi-item"><div class="hi-num">3</div><div class="hi-label">ระดับผู้เล่น</div></div>
+      <div class="hi-item"><div class="hi-num">7</div><div class="hi-label">เครื่องมือ Interactive</div></div>
+      <div class="hi-item"><div class="hi-num">0.01%</div><div class="hi-label">เป้าหมาย</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ASSESSMENT -->
+<section id="assess">
+  <div class="container-sm">
+    <div class="reveal">
+      <div class="section-label">▸ Step 1 · Self-Assessment</div>
+      <h2 class="section-title">ก่อนอื่น — คุณอยู่ระดับไหน?</h2>
+      <p class="section-lead">
+        ตอบคำถาม 5 ข้อนี้อย่างตรงไปตรงมา ผลลัพธ์จะบอกว่าคุณควรโฟกัสอะไรก่อน — Skill, Game Sense หรือทั้งสองอย่าง
+      </p>
+    </div>
+
+    <div class="assessment reveal" id="assessment">
+      <div class="ass-header">
+        <div class="ass-step">คำถาม <span class="cur" id="qCur">1</span>/5</div>
+        <div class="ass-progress"><div class="ass-progress-bar" id="assBar"></div></div>
+      </div>
+      <div id="assBody">
+        <!-- Questions injected by JS -->
+      </div>
+      <div class="ass-nav">
+        <button class="btn btn-ghost" id="assBack" disabled>← ย้อนกลับ</button>
+        <button class="btn btn-primary" id="assNext" disabled>ถัดไป →</button>
+      </div>
+
+      <div class="ass-result" id="assResult">
+        <div class="result-badge" id="resultBadge"></div>
+        <div class="result-title" id="resultTitle"></div>
+        <div class="result-desc" id="resultDesc"></div>
+        <div class="result-cta-group">
+          <button class="btn btn-primary" onclick="document.getElementById('levels').scrollIntoView({behavior:'smooth'})">ดูคำแนะนำระดับนี้ →</button>
+          <button class="btn btn-ghost" id="assRetry">ทำแบบทดสอบใหม่</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FORMULA -->
+<section id="formula">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">▸ Step 2 · Core Theory</div>
+      <h2 class="section-title">สูตรหลักของทุกการแข่งขัน</h2>
+      <p class="section-lead">
+        ไม่ว่าจะเป็น FPS, MOBA, หมากรุก, บอล, หรือเกมไพ่ — ชัยชนะในทุกการแข่งขันมีรากมาจากแค่ 3 สิ่งนี้
+      </p>
+    </div>
+
+    <div class="formula-big reveal">
+      <div class="formula-line">
+        <div class="formula-piece" title="ทักษะคือพื้นฐาน">ทักษะ</div>
+        <span class="formula-op">+</span>
+        <div class="formula-piece" title="ความเข้าใจทำให้เล่นฉลาด">ความเข้าใจเกม</div>
+        <span class="formula-op">+</span>
+        <div class="formula-piece" title="ดวงคือสิ่งที่เราควบคุมไม่ได้">ดวง</div>
+        <span class="formula-op">=</span>
+        <div class="formula-piece" style="border-color:var(--accent);background:var(--accent-soft);color:var(--accent)">ชัยชนะ</div>
+      </div>
+      <div class="formula-label">SKILL · UNDERSTANDING · LUCK</div>
+    </div>
+
+    <table class="compare-table reveal">
+      <thead>
+        <tr>
+          <th>องค์ประกอบ</th>
+          <th>FPS</th>
+          <th>MOBA</th>
+          <th>หมากรุก</th>
+          <th>Poker</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Skill Play</td>
+          <td>การเล็ง · การเคลื่อนที่</td>
+          <td>Micro · CS · ยืนเลน</td>
+          <td>ควบคุมตัวหมาก</td>
+          <td>ความเร็วในการตัดสินใจ</td>
+        </tr>
+        <tr>
+          <td>Understanding</td>
+          <td>Position · แผนการเล่น · มุมดักยิง</td>
+          <td>Macro · Draft · Map awareness</td>
+          <td>Opening · อ่านตาเดินล่วงหน้า</td>
+          <td>Nut · Out · Expected Value</td>
+        </tr>
+        <tr>
+          <td>Luck</td>
+          <td>การสุ่มของสเปรย์</td>
+          <td>RNG · ทีมแรนดอม</td>
+          <td>ต่ำมาก (เกมข้อมูลสมบูรณ์)</td>
+          <td>ไพ่ที่ถูกแจก</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- LEVELS -->
+<section id="levels" style="background:linear-gradient(180deg,transparent,rgba(230,57,70,0.02),transparent)">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">▸ Step 3 · Player Levels</div>
+      <h2 class="section-title">3 ระดับของผู้เล่น · คุณกำลังยืนอยู่ตรงไหน?</h2>
+      <p class="section-lead">
+        ถ้าจะพัฒนา ต้องรู้ว่าตัวเองอยู่ตรงไหนก่อน — เพราะสิ่งที่ควรโฟกัสในแต่ละระดับแตกต่างกันโดยสิ้นเชิง
+      </p>
+    </div>
+
+    <div class="level-tabs reveal" id="levelTabs">
+      <button class="level-tab active" data-level="1">
+        <span class="level-tab-num">LEVEL 01</span>
+        <span class="level-tab-name">ระดับเริ่มต้น</span>
+      </button>
+      <button class="level-tab" data-level="2">
+        <span class="level-tab-num">LEVEL 02</span>
+        <span class="level-tab-name">ระดับกลาง</span>
+      </button>
+      <button class="level-tab" data-level="3">
+        <span class="level-tab-num">LEVEL 03</span>
+        <span class="level-tab-name">ระดับสูง</span>
+      </button>
+    </div>
+
+    <!-- LEVEL 1 -->
+    <div class="level-panel active" data-level="1">
+      <div class="level-intro">
+        <h3>▸ ทักษะคือทุกสิ่ง (Skill Play Dominates)</h3>
+        <p>
+          ในระดับนี้ <strong>ต่อให้เข้าใจเกมแค่ไหน ถ้าทักษะไม่ถึง ก็เอาชนะไม่ได้</strong>
+          — ความเข้าใจเกมช่วยเพิ่มโอกาส แต่ถ้าทักษะการเล่นไม่สอดคล้องกัน ก็ไม่สามารถคว้าโอกาสนั้นไว้ได้
+        </p>
+      </div>
+
+      <div class="skill-grid">
+        <div class="skill-item">
+          <div class="skill-item-head"><span class="skill-badge">FPS</span><h4>การเล็ง + การเคลื่อนที่</h4></div>
+          <p>ทักษะในการเล็งเป้าในเกม ควบคุมแรงถีบปืน — หากทักษะต่างกันมาก ฝ่ายทักษะสูงกว่าจะชนะขาด โผล่ไปหัวแตกรัว ๆ</p>
+        </div>
+        <div class="skill-item">
+          <div class="skill-item-head"><span class="skill-badge">MOBA</span><h4>Micro + CS + ยืนเลน</h4></div>
+          <p>ทักษะในการควบคุมตัวละคร (Micro), การลาสครีป (CS), การสู้เลนและยืนเลน — ถึงรู้จัก counter แต่ถ้าทักษะต่างกันมาก จะแพ้ตั้งแต่ช่วงแรก</p>
+        </div>
+        <div class="skill-item">
+          <div class="skill-item-head"><span class="skill-badge">Chess</span><h4>การวิเคราะห์ตัวหมาก</h4></div>
+          <p>ความสามารถในการอ่านตาเดินล่วงหน้า วิเคราะห์ประเด็นต่าง ๆ — ทักษะของผู้เล่นส่งผลกับผลแพ้ชนะอย่างชัดเจน</p>
+        </div>
+        <div class="skill-item">
+          <div class="skill-item-head"><span class="skill-badge">Sport</span><h4>ความแม่นยำ + ควบคุม</h4></div>
+          <p>บอล: เลี้ยง/แย่ง/ทำประตู · สนุ้กเกอร์: ถ้ายิงไม่ลง ก็ไม่ได้แต้ม — พื้นฐานที่ต้องมีก่อนคิดเรื่องอื่น</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEVEL 2 -->
+    <div class="level-panel" data-level="2">
+      <div class="level-intro">
+        <h3>▸ Game Sense แยก "เล่นเก่ง" ออกจาก "เล่นดี"</h3>
+        <p>
+          ในระดับนี้ทุกคนมีทักษะพื้นฐานครบถ้วนแล้ว — <strong>สิ่งที่ทำให้คนโดดเด่นคือความเข้าใจเกม</strong> ไม่ใช่เขาทักษะดีกว่า แต่เขาหาโอกาสได้มากกว่า หรือที่เรียกว่า "เล่นฉลาด"
+        </p>
+      </div>
+
+      <div class="skill-grid">
+        <div class="skill-item">
+          <div class="skill-item-head"><span class="skill-badge">Snooker</span><h4>การวางลูกขาว</h4></div>
+          <p>เมื่อทุกคนยิงลูกลงได้แล้ว ขั้นต่อไปคือใครวางลูกขาวให้ตัวเองเก็บต่อได้ง่ายกว่า</p>
+        </div>
+        <div class="skill-item">
+          <div class="skill-item-head"><span class="skill-badge">MOBA</span><h4>Draft + Macro + Timing</h4></div>
+          <p>เข้าใจตัวละครอย่างดี รู้ชนะแพ้ทาง Timing อ่าน Macro Map — ไม่ได้ทำให้ทักษะดีขึ้น แต่ทำให้เล่นในจังหวะได้เปรียบ</p>
+        </div>
+        <div class="skill-item">
+          <div class="skill-item-head"><span class="skill-badge">FPS</span><h4>Position + การสื่อสาร</h4></div>
+          <p>อยู่ถูกที่ถูกเวลา รู้มุมที่ต้องเช็ก คอมโบกับเพื่อน — "สู้ในจังหวะที่ได้เปรียบ" เพิ่มโอกาสชนะมหาศาล</p>
+        </div>
+        <div class="skill-item">
+          <div class="skill-item-head"><span class="skill-badge">Chess</span><h4>Opening Theory</h4></div>
+          <p>Queen's Gambit, Ruy López, Italian Game — ไม่ต้องคิดตั้งแต่ต้น เพราะเจอรูปแบบนี้มาเป็นพันรอบแล้ว</p>
+        </div>
+        <div class="skill-item">
+          <div class="skill-item-head"><span class="skill-badge">Poker</span><h4>นับ Out + Expected Value</h4></div>
+          <p>คำนวณความเสี่ยงเทียบกับผลตอบแทน — อัตราชนะขึ้นกับ Skill 40% + Understanding 40% + Luck 20%</p>
+        </div>
+        <div class="skill-item">
+          <div class="skill-item-head"><span class="skill-badge">Universal</span><h4>Game Sense</h4></div>
+          <p>ถ้าฝึกและศึกษามากพอ สิ่งเหล่านี้จะออกมาโดยไม่ต้องคิด — นี่คือ Game Sense ของแท้</p>
+        </div>
+      </div>
+
+      <div class="quote-big">
+        <p>ความเข้าใจเกมคือสิ่งที่แยกคนเล่นเก่งกับคนเล่นดีได้อย่างชัดเจน — การเข้าใจเกมทำให้เราเล่นง่ายขึ้นและชัดเจนขึ้น</p>
+        <div class="quote-author">— Chapter 03, Mid Level</div>
+      </div>
+    </div>
+
+    <!-- LEVEL 3 -->
+    <div class="level-panel" data-level="3">
+      <div class="level-intro">
+        <h3>▸ META + Skill Play ที่ทะลวงทุกคน</h3>
+        <p>
+          ระดับสูงคือที่ของผู้เล่นที่มี Skill Play แน่นมาก ๆ และเข้าใจเกมอย่างลึกซึ้ง — เมื่อปะทะกับคนระดับเดียวกัน จะเห็น Pattern การสู้ที่ใกล้เคียงกัน
+          <strong>"META" เกิดขึ้นเมื่อความเข้าใจเต็มที่บวก Skill Play ระดับสูง</strong>
+        </p>
+      </div>
+
+      <div class="skill-grid">
+        <div class="skill-item">
+          <div class="skill-item-head"><span class="skill-badge">META</span><h4>แผนการเล่นที่ดีที่สุด</h4></div>
+          <p>เกิดขึ้นเมื่อผู้เล่นระดับสูงค้นพบวิธีเล่นที่ให้ผลลัพธ์ดีที่สุดต่อความเสี่ยง — เช่น บาสเกตบอลยุคยิง 3 แต้ม</p>
+        </div>
+        <div class="skill-item">
+          <div class="skill-item-head"><span class="skill-badge">EDGE</span><h4>ความได้เปรียบทางตัวละคร</h4></div>
+          <p>เมื่อทุกคนเข้าใจเกมเท่ากัน ความได้เปรียบทางตัวละคร/ตำแหน่งกลายเป็นสิ่งสำคัญที่สุด</p>
+        </div>
+        <div class="skill-item">
+          <div class="skill-item-head"><span class="skill-badge">∞</span><h4>Skill Ceiling ที่ไม่มีที่สิ้นสุด</h4></div>
+          <p>ความเข้าใจเกมมีทางตัน — แต่ Skill Play พัฒนาได้ไม่จบ ผู้เล่น Skill สูงกว่าจะโดดเด่นขึ้นมาเสมอ</p>
+        </div>
+        <div class="skill-item">
+          <div class="skill-item-head"><span class="skill-badge">REFINE</span><h4>การขัดเกลารายละเอียด</h4></div>
+          <p>ในระดับนี้ทุกการตัดสินใจเล็ก ๆ น้อย ๆ มีผล — การขัดเกลารายละเอียดยิบย่อยคือสิ่งที่แยกแชมป์จากรองแชมป์</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- POKER CALCULATOR -->
+<section id="poker">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">▸ Interactive Tool #1</div>
+      <h2 class="section-title">เครื่องคำนวณโอกาสชนะ Poker</h2>
+      <p class="section-lead">
+        เลื่อนเพื่อเปลี่ยนสถานการณ์ แล้วดูว่าโอกาสชนะและผลตอบแทนที่ยุติธรรมเปลี่ยนไปอย่างไร — นี่คือ "สูตรคูณของ Poker" ที่ผู้เล่นระดับสูงคำนวณในหัวทันที
+      </p>
+    </div>
+
+    <div class="poker-calc reveal">
+      <div class="calc-scenario">
+        <div class="calc-scenario-label">▸ Scenario · ตัวอย่างจากหนังสือ</div>
+        <h4>คุณมีไพ่หัวใจ 2 ใบในมือ — มีไพ่หัวใจอีก 2 ใบบนโต๊ะแล้ว</h4>
+        <p>คำถาม: ไพ่ใบถัดไปจะเป็นหัวใจ (ได้ Flush) กี่เปอร์เซ็นต์?</p>
+      </div>
+
+      <!-- Card visual -->
+      <div class="card-visual" id="cardVisual">
+        <!-- Injected by JS -->
+      </div>
+
+      <div class="calc-controls">
+        <div class="calc-control">
+          <label>ไพ่หัวใจที่เห็นแล้ว</label>
+          <div class="slider-row">
+            <input type="range" id="heartsSeen" min="2" max="10" value="4">
+            <span class="val" id="heartsSeenVal">4</span>
+          </div>
+        </div>
+        <div class="calc-control">
+          <label>ไพ่ที่เปิดออกมาแล้ว</label>
+          <div class="slider-row">
+            <input type="range" id="cardsSeen" min="5" max="7" value="5">
+            <span class="val" id="cardsSeenVal">5</span>
+          </div>
+        </div>
+        <div class="calc-control">
+          <label>ขนาดเงินเดิมพัน (chips)</label>
+          <div class="slider-row">
+            <input type="range" id="potSize" min="10" max="500" value="100" step="10">
+            <span class="val" id="potSizeVal">100</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="calc-output">
+        <div class="calc-out-item">
+          <div class="calc-out-big red" id="outProb">19%</div>
+          <div class="calc-out-label">โอกาสได้ฟลัช</div>
+        </div>
+        <div class="calc-out-item">
+          <div class="calc-out-big green" id="outOut">9</div>
+          <div class="calc-out-label">Out ที่เหลือ</div>
+        </div>
+        <div class="calc-out-item">
+          <div class="calc-out-big blue" id="outRatio">5.23×</div>
+          <div class="calc-out-label">ผลตอบแทนที่ยุติธรรม</div>
+        </div>
+      </div>
+
+      <div class="calc-explain" id="calcExplain">
+        <strong>การคำนวณ:</strong> ไพ่หัวใจในกองมี 13 ใบ · เห็นไปแล้ว <code>4</code> ใบ · เหลือ <code>9</code> ใบ
+        <br>ไพ่ทั้งหมด 52 ใบ · เปิดไปแล้ว <code>5</code> ใบ · เหลือ <code>47</code> ใบ
+        <br><strong>โอกาส = 9/47 ≈ 19.1%</strong> · ผลตอบแทนที่ยุติธรรม = 100/19 ≈ <code>5.23 เท่า</code> ของเงินทุน
+      </div>
+    </div>
+
+    <div class="quote-big reveal">
+      <p>คุณมีทักษะในการคำนวณอย่างดีเยี่ยม + เข้าใจกฎ + บริหารความเสี่ยงกับเงินทุน = คุณจะมีโอกาสชนะผู้เล่นทั่วไปสูงมาก</p>
+      <div class="quote-author">— Chapter 03 · Poker Section</div>
+    </div>
+  </div>
+</section>
+
+<!-- GAME SENSE BUILDER -->
+<section id="gamesense">
+  <div class="container-sm">
+    <div class="reveal">
+      <div class="section-label">▸ Interactive Tool #2</div>
+      <h2 class="section-title">ฝึก Game Sense · คิดแบบผู้เล่นระดับสูง</h2>
+      <p class="section-lead">
+        ลองตอบคำถามสถานการณ์สมจริง — ดูว่าคุณตัดสินใจเหมือนผู้เล่นระดับกลางหรือระดับสูง
+      </p>
+    </div>
+
+    <div class="gs-builder reveal" id="gsBuilder">
+      <div id="gsCounter" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-mute);letter-spacing:0.2em;margin-bottom:20px">สถานการณ์ที่ <span style="color:var(--accent)">1</span>/4</div>
+      <div class="gs-question" id="gsQuestion">Loading...</div>
+      <div class="gs-answers" id="gsAnswers"></div>
+      <div class="gs-feedback" id="gsFeedback"></div>
+      <div class="gs-next">
+        <button class="btn btn-primary" id="gsNext" style="display:none">ถัดไป →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCHEDULE PICKER -->
+<section id="schedule" style="background:linear-gradient(180deg,transparent,rgba(230,57,70,0.02),transparent)">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">▸ Interactive Tool #3</div>
+      <h2 class="section-title">ตารางฝึกซ้อมรายสัปดาห์</h2>
+      <p class="section-lead">
+        เลือกเกมแนวที่คุณเล่น แล้วได้ตารางฝึกแบบละเอียดที่ใช้ได้จริงทันที — ผสมการขัดเกลา Skill Play, Game Sense และความสนุกไว้ด้วยกัน
+      </p>
+    </div>
+
+    <div class="schedule-picker reveal">
+      <div class="schedule-tabs">
+        <button class="sched-tab active" data-sched="fps">🎯 FPS</button>
+        <button class="sched-tab" data-sched="moba">⚔️ MOBA</button>
+        <button class="sched-tab" data-sched="chess">♚ หมากรุก</button>
+        <button class="sched-tab" data-sched="poker">♠ Poker</button>
+      </div>
+
+      <!-- FPS Schedule -->
+      <div class="sched-content active" data-sched="fps">
+        <div style="overflow-x:auto">
+        <table class="schedule-table">
+          <thead>
+            <tr><th>วัน</th><th>ช่วงเช้า (1 ชม.)</th><th>ช่วงบ่าย (1 ชม.)</th><th>ช่วงเย็น (1 ชม.)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="day">MON</td>
+              <td><div class="sched-cell"><span class="sched-icon">🎯</span>ฝึกเล็ง (Aim Trainer)</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🏃</span>ฝึกเคลื่อนที่ & Recoil</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🏆</span>Ranked Match</div></td>
+            </tr>
+            <tr><td class="day">TUE</td>
+              <td><div class="sched-cell"><span class="sched-icon">🎯</span>ฝึกเล็ง</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🧠</span>ดูเดโม & วิเคราะห์เกม</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🎮</span>Custom Game · ทดลองกลยุทธ์</div></td>
+            </tr>
+            <tr><td class="day">WED</td>
+              <td><div class="sched-cell"><span class="sched-icon">🎯</span>ฝึกเล็ง</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🧠</span>ฝึก Game Sense</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">⚔️</span>Deathmatch · วอร์มอัป</div></td>
+            </tr>
+            <tr><td class="day">THU</td>
+              <td><div class="sched-cell"><span class="sched-icon">🎯</span>ฝึกเล็ง</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🏃</span>ฝึกเคลื่อนที่ & Recoil</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🏆</span>Ranked Match</div></td>
+            </tr>
+            <tr><td class="day">FRI</td>
+              <td><div class="sched-cell"><span class="sched-icon">🎯</span>ฝึกเล็ง</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🧠</span>ดูเดโม & วิเคราะห์</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🤝</span>เล่นกับเพื่อน</div></td>
+            </tr>
+            <tr><td class="day">SAT</td>
+              <td><div class="sched-cell"><span class="sched-icon">🎯</span>ฝึกเล็ง</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🧠</span>ฝึกตามสถานการณ์</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🎉</span>เล่นเพื่อสนุก / Cooldown</div></td>
+            </tr>
+            <tr><td class="day">SUN</td>
+              <td><div class="sched-cell sched-rest"><span class="sched-icon">😴</span>พักผ่อน</div></td>
+              <td><div class="sched-cell sched-rest"><span class="sched-icon">😴</span>พักผ่อน</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🎉</span>เล่นเพื่อสนุก</div></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="sched-legend">
+          <div class="leg-item"><span class="leg-icon">🎯</span><span class="leg-text"><strong>ฝึกเล็ง</strong>ฝึกยิงเป้าในเกม หรือใช้โปรแกรม Aim Trainer</span></div>
+          <div class="leg-item"><span class="leg-icon">🏃</span><span class="leg-text"><strong>ฝึกเคลื่อนที่</strong>Strafe, Bunny Hop, Jiggle Peek, Recoil Control</span></div>
+          <div class="leg-item"><span class="leg-icon">🧠</span><span class="leg-text"><strong>ฝึก Game Sense</strong>อ่านเกม คาดเดาตำแหน่งศัตรู</span></div>
+          <div class="leg-item"><span class="leg-icon">⚔️</span><span class="leg-text"><strong>Deathmatch</strong>ฝึกทักษะพื้นฐานและวอร์มอัป</span></div>
+          <div class="leg-item"><span class="leg-icon">🏆</span><span class="leg-text"><strong>Ranked</strong>ฝึกเล่นภายใต้แรงกดดัน</span></div>
+          <div class="leg-item"><span class="leg-icon">🎮</span><span class="leg-text"><strong>Custom Game</strong>ฝึกสถานการณ์เฉพาะหรือทดลองกลยุทธ์</span></div>
+        </div>
+      </div>
+
+      <!-- MOBA Schedule -->
+      <div class="sched-content" data-sched="moba">
+        <div style="overflow-x:auto">
+        <table class="schedule-table">
+          <thead>
+            <tr><th>วัน</th><th>ช่วงเช้า (1 ชม.)</th><th>ช่วงบ่าย (1 ชม.)</th><th>ช่วงเย็น (1 ชม.)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="day">MON</td>
+              <td><div class="sched-cell"><span class="sched-icon">🎯</span>ฝึก Last Hit & Deny</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🧠</span>ศึกษาฮีโร่ (ดูเดโม/ไกด์)</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">⚔️</span>ปกติ / จัดอันดับ</div></td>
+            </tr>
+            <tr><td class="day">TUE</td>
+              <td><div class="sched-cell"><span class="sched-icon">🎯</span>ฝึก Combo & Mechanics</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🧠</span>ศึกษาไอเทม & แผนที่</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🤝</span>เล่นกับเพื่อน / ทีม</div></td>
+            </tr>
+            <tr><td class="day">WED</td>
+              <td><div class="sched-cell"><span class="sched-icon">🎯</span>ฝึก Last Hit & Deny</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🔍</span>วิเคราะห์ Replay ตัวเอง</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">⚔️</span>ปกติ / จัดอันดับ</div></td>
+            </tr>
+            <tr><td class="day">THU</td>
+              <td><div class="sched-cell"><span class="sched-icon">🎯</span>ฝึก Combo & Mechanics</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🧠</span>ศึกษา Meta ปัจจุบัน</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🤝</span>เล่นกับเพื่อน / ทีม</div></td>
+            </tr>
+            <tr><td class="day">FRI</td>
+              <td><div class="sched-cell"><span class="sched-icon">🎯</span>ฝึก Last Hit & Deny</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🎭</span>ทบทวนฮีโร่ที่เล่นบ่อย</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">⚔️</span>ปกติ / จัดอันดับ</div></td>
+            </tr>
+            <tr><td class="day">SAT</td>
+              <td><div class="sched-cell"><span class="sched-icon">🎯</span>ฝึก Combo & Mechanics</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🗺️</span>ฝึก Macro (ตัดสินใจเกมรวม)</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🤝</span>เล่นกับเพื่อน / ทีม</div></td>
+            </tr>
+            <tr><td class="day">SUN</td>
+              <td><div class="sched-cell sched-rest"><span class="sched-icon">😴</span>พักผ่อน</div></td>
+              <td><div class="sched-cell sched-rest"><span class="sched-icon">😴</span>พักผ่อน</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🎉</span>เล่นเพื่อสนุก / Cooldown</div></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="sched-legend">
+          <div class="leg-item"><span class="leg-icon">🎯</span><span class="leg-text"><strong>Last Hit & Deny</strong>การลาสฮิตและปฏิเสธครีปเพื่อเก็บเงิน</span></div>
+          <div class="leg-item"><span class="leg-icon">🧠</span><span class="leg-text"><strong>ศึกษาฮีโร่</strong>สกิล จุดแข็ง-จุดอ่อน วิธีเล่น</span></div>
+          <div class="leg-item"><span class="leg-icon">🔍</span><span class="leg-text"><strong>วิเคราะห์ Replay</strong>ดูเกมตัวเองเพื่อหาจุดที่ต้องปรับปรุง</span></div>
+          <div class="leg-item"><span class="leg-icon">🗺️</span><span class="leg-text"><strong>Macro</strong>ตัดสินใจภาพรวม การวางแผน การอ่านเกม</span></div>
+        </div>
+      </div>
+
+      <!-- Chess Schedule -->
+      <div class="sched-content" data-sched="chess">
+        <div style="overflow-x:auto">
+        <table class="schedule-table">
+          <thead>
+            <tr><th>วัน</th><th>ช่วงเช้า (45 นาที)</th><th>ช่วงบ่าย (45 นาที)</th><th>ช่วงเย็น (45 นาที)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="day">MON</td>
+              <td><div class="sched-cell"><span class="sched-icon">♟️</span>ฝึก Tactics Puzzles</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">📖</span>ศึกษา Opening · 1 ระบบ</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">⚔️</span>Rapid (15+10)</div></td>
+            </tr>
+            <tr><td class="day">TUE</td>
+              <td><div class="sched-cell"><span class="sched-icon">♟️</span>Tactics Puzzles</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🔍</span>วิเคราะห์เกมตัวเอง</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">⚔️</span>Rapid / Blitz</div></td>
+            </tr>
+            <tr><td class="day">WED</td>
+              <td><div class="sched-cell"><span class="sched-icon">♟️</span>Endgame Study</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">📖</span>ศึกษา Opening</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">⚔️</span>Rapid</div></td>
+            </tr>
+            <tr><td class="day">THU</td>
+              <td><div class="sched-cell"><span class="sched-icon">♟️</span>Tactics Puzzles</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🎬</span>ดูเกม GM + วิเคราะห์</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">⚔️</span>Classical</div></td>
+            </tr>
+            <tr><td class="day">FRI</td>
+              <td><div class="sched-cell"><span class="sched-icon">♟️</span>Tactics Puzzles</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🧠</span>Middlegame Strategy</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">⚔️</span>Rapid</div></td>
+            </tr>
+            <tr><td class="day">SAT</td>
+              <td><div class="sched-cell"><span class="sched-icon">♟️</span>Tactics · Hard Level</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🔍</span>วิเคราะห์เกมตัวเอง (ลึก)</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🏆</span>Tournament / Long Game</div></td>
+            </tr>
+            <tr><td class="day">SUN</td>
+              <td><div class="sched-cell sched-rest"><span class="sched-icon">😴</span>พักผ่อน</div></td>
+              <td><div class="sched-cell sched-rest"><span class="sched-icon">😴</span>พักผ่อน</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🎉</span>Bullet / เล่นเพื่อสนุก</div></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="sched-legend">
+          <div class="leg-item"><span class="leg-icon">♟️</span><span class="leg-text"><strong>Tactics Puzzles</strong>ฝึกคิดหาการเดินที่ถูกต้อง (Lichess/Chess.com)</span></div>
+          <div class="leg-item"><span class="leg-icon">📖</span><span class="leg-text"><strong>Opening</strong>ศึกษาระบบเปิดเกมให้ลึก (Italian, Queen's Gambit...)</span></div>
+          <div class="leg-item"><span class="leg-icon">🎬</span><span class="leg-text"><strong>ดูเกม GM</strong>เรียนจากการเล่นของ Grandmaster</span></div>
+          <div class="leg-item"><span class="leg-icon">🧠</span><span class="leg-text"><strong>Middlegame</strong>แผนกลางเกม การวางแผนเชิงกลยุทธ์</span></div>
+        </div>
+      </div>
+
+      <!-- Poker Schedule -->
+      <div class="sched-content" data-sched="poker">
+        <div style="overflow-x:auto">
+        <table class="schedule-table">
+          <thead>
+            <tr><th>วัน</th><th>ช่วงเช้า (45 นาที)</th><th>ช่วงบ่าย (45 นาที)</th><th>ช่วงเย็น (1 ชม.)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="day">MON</td>
+              <td><div class="sched-cell"><span class="sched-icon">🧮</span>ฝึกนับ Out + EV</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">📖</span>Study Theory · Preflop</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">♠</span>Cash Game · Low Stakes</div></td>
+            </tr>
+            <tr><td class="day">TUE</td>
+              <td><div class="sched-cell"><span class="sched-icon">🧮</span>Pot Odds Drill</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🔍</span>วิเคราะห์ Hand History</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">♠</span>MTT Tournament</div></td>
+            </tr>
+            <tr><td class="day">WED</td>
+              <td><div class="sched-cell"><span class="sched-icon">🧮</span>ฝึกนับ Out + EV</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">📖</span>Postflop Theory</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">♠</span>Cash Game</div></td>
+            </tr>
+            <tr><td class="day">THU</td>
+              <td><div class="sched-cell"><span class="sched-icon">🧠</span>Range Building</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🎬</span>ดูเกม Pro + วิเคราะห์</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">♠</span>Cash Game</div></td>
+            </tr>
+            <tr><td class="day">FRI</td>
+              <td><div class="sched-cell"><span class="sched-icon">🧮</span>Math Practice</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🧠</span>Opponent Profiling</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">♠</span>Home Game / Friends</div></td>
+            </tr>
+            <tr><td class="day">SAT</td>
+              <td><div class="sched-cell"><span class="sched-icon">🔍</span>Deep Review Session</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">📖</span>Advanced Concepts</div></td>
+              <td><div class="sched-cell"><span class="sched-icon">🏆</span>Tournament · Long</div></td>
+            </tr>
+            <tr><td class="day">SUN</td>
+              <td><div class="sched-cell sched-rest"><span class="sched-icon">😴</span>พักผ่อน</div></td>
+              <td><div class="sched-cell sched-rest"><span class="sched-icon">😴</span>พักผ่อน</div></td>
+              <td><div class="sched-cell sched-rest"><span class="sched-icon">🧘</span>Bankroll Review</div></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="sched-legend">
+          <div class="leg-item"><span class="leg-icon">🧮</span><span class="leg-text"><strong>นับ Out + EV</strong>ฝึกคำนวณความน่าจะเป็นและ Expected Value</span></div>
+          <div class="leg-item"><span class="leg-icon">📖</span><span class="leg-text"><strong>Theory</strong>Preflop Range, Postflop Play</span></div>
+          <div class="leg-item"><span class="leg-icon">🔍</span><span class="leg-text"><strong>Hand History</strong>ทบทวนมือที่เล่นไปแล้วเพื่อหาจุดปรับปรุง</span></div>
+          <div class="leg-item"><span class="leg-icon">🧠</span><span class="leg-text"><strong>Range / Profiling</strong>ประมาณไพ่ของคู่แข่งตามพฤติกรรม</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHECKLIST -->
+<section id="checklist">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">▸ Interactive Tool #4</div>
+      <h2 class="section-title">Daily Checklist ก่อนเริ่มเล่น</h2>
+      <p class="section-lead">
+        ทำเครื่องหมายในสิ่งที่คุณทำแล้ววันนี้ — ผู้เล่นระดับสูงไม่เริ่มเล่นถ้ายังไม่ได้เตรียมพร้อมในทั้ง 3 มิตินี้ (Skill · Mind · Knowledge)
+      </p>
+    </div>
+
+    <div class="checklist-box reveal">
+      <div class="checklist-head">
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-mute);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:4px">▸ Pre-Game Routine</div>
+          <div style="font-size:18px;font-weight:700">Checklist รายวัน · 10 ข้อ</div>
+        </div>
+        <div class="checklist-progress">
+          <div class="check-count"><span id="checkDone">0</span>/10</div>
+          <div class="check-bar"><div class="check-bar-fill" id="checkBar"></div></div>
+        </div>
+      </div>
+      <div class="checklist-items" id="checklistItems">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GRIT SECTION -->
+<section id="grit" style="background:linear-gradient(180deg,transparent,rgba(230,57,70,0.03),transparent)">
+  <div class="container-sm">
+    <div class="reveal">
+      <div class="section-label">▸ Final Truth</div>
+      <h2 class="section-title">ไม่ใช่พรสวรรค์ — แต่คือ Grit</h2>
+      <p class="section-lead">
+        Angela Duckworth พิสูจน์ว่า <strong style="color:var(--ink)">ความพยายามมีผล 2 เท่าของพรสวรรค์</strong> — เพราะมันถูกคูณสองครั้ง
+      </p>
+    </div>
+
+    <div class="formula-big reveal">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div class="formula-line">
+          <div class="formula-piece">พรสวรรค์</div>
+          <span class="formula-op">×</span>
+          <div class="formula-piece">ความพยายาม</div>
+          <span class="formula-op">=</span>
+          <div class="formula-piece" style="border-color:var(--info);background:var(--info-soft);color:var(--info)">ทักษะ</div>
+        </div>
+        <div class="formula-line">
+          <div class="formula-piece" style="border-color:var(--info);background:var(--info-soft);color:var(--info)">ทักษะ</div>
+          <span class="formula-op">×</span>
+          <div class="formula-piece">ความพยายาม</div>
+          <span class="formula-op">=</span>
+          <div class="formula-piece" style="border-color:var(--accent);background:var(--accent-soft);color:var(--accent)">ความสำเร็จ</div>
+        </div>
+      </div>
+      <div class="formula-label">Success Formula · Duckworth (2016)</div>
+    </div>
+
+    <div class="growth-demo reveal">
+      <div style="font-size:18px;font-weight:700;margin-bottom:8px">The Plateau of Latent Potential</div>
+      <div style="font-size:14px;color:var(--ink-dim);margin-bottom:24px">ผลที่คุณคาดหวัง vs. ผลที่เกิดขึ้นจริง</div>
+      <div class="growth-chart">
+        <div class="growth-axis-y">ผลลัพธ์</div>
+        <div class="growth-axis-x">เวลา →</div>
+        <svg class="growth-line" viewBox="0 0 500 280" preserveAspectRatio="none">
+          <!-- Linear line (expected) -->
+          <line x1="0" y1="280" x2="500" y2="20" stroke="#60a5fa" stroke-width="2" stroke-dasharray="6,4"/>
+          <!-- Hockey stick (actual) -->
+          <path d="M 0 280 Q 200 270, 300 230 T 500 0" stroke="#e63946" stroke-width="3" fill="none"/>
+          <!-- Valley annotation -->
+          <circle cx="250" cy="260" r="4" fill="#fbbf24"/>
+          <text x="260" y="275" font-family="JetBrains Mono,monospace" font-size="11" fill="#fbbf24">← Valley of Disappointment</text>
+          <text x="380" y="70" font-family="JetBrains Mono,monospace" font-size="11" fill="#e63946" text-anchor="end">ผลจริง ↗</text>
+          <text x="150" y="150" font-family="JetBrains Mono,monospace" font-size="11" fill="#60a5fa">↘ ผลที่คิดว่าควรได้</text>
+        </svg>
+      </div>
+      <div class="growth-legend">
+        <div class="growth-leg"><span class="growth-leg-color" style="background:#60a5fa"></span>สิ่งที่คุณคาดหวัง (เส้นตรง)</div>
+        <div class="growth-leg"><span class="growth-leg-color" style="background:#e63946"></span>สิ่งที่เกิดขึ้นจริง (Hockey Stick)</div>
+        <div class="growth-leg"><span class="growth-leg-color" style="background:#fbbf24"></span>จุดที่คนส่วนใหญ่ยอมแพ้</div>
+      </div>
+      <p style="color:var(--ink-dim);font-size:14px;line-height:1.8;margin-top:24px">
+        คนส่วนใหญ่หยุดตรง "หุบเขาแห่งความผิดหวัง" เพราะยังไม่เห็นผล — แต่ผลลัพธ์แบบก้าวกระโดดรอคุณอยู่หลังจุดนั้น ถ้าไม่ล้มเลิก
+      </p>
+    </div>
+
+    <div class="quote-big reveal">
+      <p>ไม่มีหรอกล้มเหลว — มีแต่ล้มเลิก</p>
+      <div class="quote-author">— คุณพ่อนที</div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section style="border-top:none;padding-bottom:120px">
+  <div class="container">
+    <div class="final-cta reveal">
+      <div class="final-cta-label">▸ จบบทที่ 3</div>
+      <h2>คุณพร้อมแล้ว<br>— เริ่มเล่นเลย</h2>
+      <p>
+        ตอนนี้คุณรู้แล้วว่า "แค่เล่นเกม" ไม่พอ — ต้องรู้ว่าตัวเองอยู่ระดับไหน ฝึกอย่างเป็นระบบ มี Checklist ก่อนเล่น
+        และที่สำคัญที่สุด — <strong>ไม่ล้มเลิก</strong>
+        <br><br>
+        เปิดเกมของคุณ แล้วเริ่มฝึกตามตารางที่ได้ทันที
+      </p>
+      <div class="btn-group">
+        <button class="btn btn-white" onclick="document.getElementById('schedule').scrollIntoView({behavior:'smooth'})">ดูตารางฝึกอีกครั้ง</button>
+        <button class="btn btn-outline-white" onclick="document.getElementById('assess').scrollIntoView({behavior:'smooth'})">ประเมินใหม่</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // ===== PROGRESS BAR =====
+  const pb = document.getElementById('progressBar');
+  window.addEventListener('scroll',()=>{
+    const h = document.documentElement;
+    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+    pb.style.width = pct + '%';
+  });
+
+  // ===== REVEAL ON SCROLL =====
+  const io = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}
+    });
+  },{threshold:0.1,rootMargin:'0px 0px -60px 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // ===== ASSESSMENT QUIZ =====
+  const questions = [
+    {
+      q: "คุณเล่นเกมปัจจุบันของคุณมาประมาณเท่าไหร่แล้ว?",
+      opts: [
+        {text:"ต่ำกว่า 3 เดือน — เพิ่งเริ่ม", score:1},
+        {text:"3-12 เดือน — รู้พื้นฐานแล้ว", score:2},
+        {text:"1-3 ปี — เข้าใจระบบหลัก ๆ", score:3},
+        {text:"มากกว่า 3 ปี — เล่นมานานมาก", score:4}
+      ]
+    },
+    {
+      q: "เวลาแพ้ คุณมักจะ...?",
+      opts: [
+        {text:"โทษเพื่อน / ทีม / ลาก / ดวง", score:1},
+        {text:"หัวร้อน แล้วเล่นเกมต่อ", score:2},
+        {text:"ไตร่ตรองว่าทำอะไรผิดพลาด", score:3},
+        {text:"ดู Replay และวิเคราะห์อย่างละเอียด", score:4}
+      ]
+    },
+    {
+      q: "คุณรู้จัก 'Meta' ของเกมที่คุณเล่นดีแค่ไหน?",
+      opts: [
+        {text:"ไม่รู้ว่า Meta คืออะไร", score:1},
+        {text:"รู้ว่าคืออะไร แต่ไม่ได้ตามทุกอัปเดต", score:2},
+        {text:"ตามอัปเดต และปรับการเล่นตาม Meta", score:3},
+        {text:"เข้าใจ Meta ลึกซึ้ง + รู้ว่าเมื่อไหร่ควรเล่นนอก Meta", score:4}
+      ]
+    },
+    {
+      q: "คุณฝึกซ้อมเกมอย่างไร?",
+      opts: [
+        {text:"ก็แค่เล่น Ranked ไปเรื่อย ๆ", score:1},
+        {text:"เริ่มมีการวอร์มอัปก่อนเล่น", score:2},
+        {text:"แบ่งเวลาฝึก Skill / Game Sense / Ranked", score:3},
+        {text:"มีตารางฝึกชัดเจน + วิเคราะห์ตัวเองสม่ำเสมอ", score:4}
+      ]
+    },
+    {
+      q: "เวลาเจอสถานการณ์ใหม่ในเกม คุณ...?",
+      opts: [
+        {text:"มั่ว ๆ ไป ขอให้รอด", score:1},
+        {text:"ทำตามสัญชาตญาณ", score:2},
+        {text:"คิดจาก pattern ที่เคยเจอ", score:3},
+        {text:"อ่านสถานการณ์ + เลือกวิธีที่ได้เปรียบที่สุด", score:4}
+      ]
+    }
+  ];
+
+  let currentQ = 0;
+  let answers = [];
+  const assBody = document.getElementById('assBody');
+  const qCur = document.getElementById('qCur');
+  const assBar = document.getElementById('assBar');
+  const assNext = document.getElementById('assNext');
+  const assBack = document.getElementById('assBack');
+  const assResult = document.getElementById('assResult');
+
+  function renderQ(){
+    const q = questions[currentQ];
+    assBody.innerHTML = `
+      <div class="ass-q">${q.q}</div>
+      <div class="ass-options">
+        ${q.opts.map((o,i)=>`
+          <button class="ass-opt ${answers[currentQ]===i?'selected':''}" data-idx="${i}">
+            <span class="ass-opt-letter">${String.fromCharCode(65+i)}</span>
+            <span>${o.text}</span>
+          </button>
+        `).join('')}
+      </div>
+    `;
+    qCur.textContent = currentQ + 1;
+    assBar.style.width = ((currentQ+1)/questions.length*100) + '%';
+    assBack.disabled = currentQ === 0;
+    assNext.disabled = answers[currentQ] === undefined;
+    assNext.textContent = currentQ === questions.length - 1 ? 'ดูผลลัพธ์ →' : 'ถัดไป →';
+
+    document.querySelectorAll('.ass-opt').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const idx = parseInt(btn.dataset.idx);
+        answers[currentQ] = idx;
+        document.querySelectorAll('.ass-opt').forEach(b=>b.classList.remove('selected'));
+        btn.classList.add('selected');
+        assNext.disabled = false;
+      });
+    });
+  }
+
+  assNext.addEventListener('click',()=>{
+    if(currentQ < questions.length - 1){
+      currentQ++;
+      renderQ();
+    } else {
+      showResult();
+    }
+  });
+  assBack.addEventListener('click',()=>{
+    if(currentQ > 0){currentQ--;renderQ()}
+  });
+
+  function showResult(){
+    const total = answers.reduce((s,a,i)=>s+questions[i].opts[a].score,0);
+    // max = 20, min = 5
+    let level, title, desc, badgeCls;
+    if(total <= 9){
+      level = 1; badgeCls = 'lvl1';
+      title = 'ระดับเริ่มต้น — โฟกัสที่ Skill Play';
+      desc = 'ในระดับนี้ ทักษะคือทุกสิ่ง — ต่อให้เข้าใจเกมแค่ไหน ถ้าทักษะไม่ถึงก็ชนะไม่ได้ แนะนำให้โฟกัสที่การฝึกพื้นฐานเป็นหลัก แล้วค่อยเพิ่ม Game Sense ทีหลัง';
+    } else if(total <= 14){
+      level = 2; badgeCls = 'lvl2';
+      title = 'ระดับกลาง — Game Sense จะแยกคุณออกจากคนอื่น';
+      desc = 'คุณมีทักษะพื้นฐานครบแล้ว — สิ่งที่จะทำให้คุณโดดเด่นคือความเข้าใจเกม ศึกษา Meta, ทบทวนเกมตัวเอง, ฝึกอ่านเกม จะพาคุณข้ามขั้นไปสู่ระดับสูง';
+    } else {
+      level = 3; badgeCls = 'lvl3';
+      title = 'ระดับสูง — ขัดเกลารายละเอียดและ Skill Play';
+      desc = 'คุณอยู่ใน 0.01% แล้ว — จากจุดนี้การพัฒนาจะช้าและยาก เพราะ Game Sense มีทางตัน สิ่งที่เหลือคือขัดเกลา Skill Play ให้คมขึ้นเรื่อย ๆ และหาตำแหน่งที่ได้เปรียบในสถานการณ์ที่ซับซ้อน';
+    }
+    assBody.style.display = 'none';
+    document.querySelector('.ass-nav').style.display = 'none';
+    document.querySelector('.ass-header').style.display = 'none';
+    document.getElementById('resultBadge').className = 'result-badge ' + badgeCls;
+    document.getElementById('resultBadge').textContent = `Level ${level} Player`;
+    document.getElementById('resultTitle').textContent = title;
+    document.getElementById('resultDesc').textContent = desc;
+    assResult.classList.add('show');
+
+    // Auto-switch level tab
+    document.querySelectorAll('.level-tab').forEach(t=>{
+      t.classList.toggle('active',parseInt(t.dataset.level)===level);
+    });
+    document.querySelectorAll('.level-panel').forEach(p=>{
+      p.classList.toggle('active',parseInt(p.dataset.level)===level);
+    });
+  }
+
+  document.getElementById('assRetry').addEventListener('click',()=>{
+    currentQ = 0;
+    answers = [];
+    assBody.style.display = 'block';
+    document.querySelector('.ass-nav').style.display = 'flex';
+    document.querySelector('.ass-header').style.display = 'flex';
+    assResult.classList.remove('show');
+    renderQ();
+  });
+
+  renderQ();
+
+  // ===== LEVEL TABS =====
+  document.querySelectorAll('.level-tab').forEach(tab=>{
+    tab.addEventListener('click',()=>{
+      const lvl = tab.dataset.level;
+      document.querySelectorAll('.level-tab').forEach(t=>t.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelectorAll('.level-panel').forEach(p=>{
+        p.classList.toggle('active',p.dataset.level===lvl);
+      });
+    });
+  });
+
+  // ===== POKER CALCULATOR =====
+  const heartsSeen = document.getElementById('heartsSeen');
+  const cardsSeen = document.getElementById('cardsSeen');
+  const potSize = document.getElementById('potSize');
+  const heartsSeenVal = document.getElementById('heartsSeenVal');
+  const cardsSeenVal = document.getElementById('cardsSeenVal');
+  const potSizeVal = document.getElementById('potSizeVal');
+  const outProb = document.getElementById('outProb');
+  const outOut = document.getElementById('outOut');
+  const outRatio = document.getElementById('outRatio');
+  const calcExplain = document.getElementById('calcExplain');
+  const cardVisual = document.getElementById('cardVisual');
+
+  function updateCalc(){
+    const hSeen = parseInt(heartsSeen.value);
+    const cSeen = parseInt(cardsSeen.value);
+    const pot = parseInt(potSize.value);
+    heartsSeenVal.textContent = hSeen;
+    cardsSeenVal.textContent = cSeen;
+    potSizeVal.textContent = pot;
+    const heartsLeft = 13 - hSeen;
+    const cardsLeft = 52 - cSeen;
+    const prob = (heartsLeft / cardsLeft * 100);
+    const ratio = prob > 0 ? (100/prob) : 0;
+    outOut.textContent = heartsLeft;
+    outProb.textContent = prob.toFixed(1) + '%';
+    outRatio.textContent = ratio.toFixed(2) + '×';
+    calcExplain.innerHTML = `
+      <strong>การคำนวณ:</strong> ไพ่หัวใจในกองมี 13 ใบ · เห็นไปแล้ว <code>${hSeen}</code> ใบ · เหลือ <code>${heartsLeft}</code> ใบ<br>
+      ไพ่ทั้งหมด 52 ใบ · เปิดไปแล้ว <code>${cSeen}</code> ใบ · เหลือ <code>${cardsLeft}</code> ใบ<br>
+      <strong>โอกาส = ${heartsLeft}/${cardsLeft} ≈ ${prob.toFixed(1)}%</strong> · ผลตอบแทนที่ยุติธรรม ≈ <code>${ratio.toFixed(2)} เท่า</code> ของเงินทุน (${pot} × ${ratio.toFixed(2)} = ${(pot*ratio).toFixed(0)})
+    `;
+
+    // Render cards
+    renderCards(hSeen, cSeen);
+  }
+
+  function renderCards(hSeen, cSeen){
+    // Your 2 hearts + (hSeen-2) more hearts shown + (cSeen - hSeen) non-hearts
+    // Max we can render: always 2 hole cards + (cSeen - 2) board cards
+    const boardCount = Math.max(0, cSeen - 2);
+    const heartsOnBoard = Math.min(boardCount, hSeen - 2);
+    let html = '<div style="display:flex;gap:8px;align-items:center"><span style="font-family:JetBrains Mono,monospace;font-size:11px;color:#6a6a6a;letter-spacing:0.15em">HAND:</span>';
+    html += `<div class="playing-card heart"><span class="rank">A</span><span class="suit">♥</span><span class="center">♥</span></div>`;
+    html += `<div class="playing-card heart"><span class="rank">K</span><span class="suit">♥</span><span class="center">♥</span></div>`;
+    html += '</div>';
+    html += '<div style="display:flex;gap:8px;align-items:center;margin-left:16px"><span style="font-family:JetBrains Mono,monospace;font-size:11px;color:#6a6a6a;letter-spacing:0.15em">BOARD:</span>';
+    const boardRanks = ['7','9','J','Q','4'];
+    for(let i=0;i<boardCount;i++){
+      if(i<heartsOnBoard){
+        html += `<div class="playing-card heart"><span class="rank">${boardRanks[i]||'?'}</span><span class="suit">♥</span><span class="center">♥</span></div>`;
+      } else {
+        html += `<div class="playing-card" style="color:#000"><span class="rank">${boardRanks[i]||'?'}</span><span class="suit">♠</span><span class="center">♠</span></div>`;
+      }
+    }
+    html += '</div>';
+    cardVisual.innerHTML = html;
+  }
+
+  heartsSeen.addEventListener('input',updateCalc);
+  cardsSeen.addEventListener('input',updateCalc);
+  potSize.addEventListener('input',updateCalc);
+  updateCalc();
+
+  // ===== GAME SENSE BUILDER =====
+  const gsScenarios = [
+    {
+      q: "🎯 FPS · คุณเจอศัตรูแต่กระสุนเหลือ 5 นัด และยังมีอีกหลายคนอยู่ข้างหน้า — ควรทำอย่างไร?",
+      opts: [
+        {text:"ยิงสู้เต็มที่เพื่อไม่พลาดโอกาส", correct:false},
+        {text:"ถอยออกมา รีโหลด แล้วรอจังหวะที่ได้เปรียบ", correct:true},
+        {text:"โยนระเบิดออกไปแล้วพุ่งเข้าไป", correct:false}
+      ],
+      explain: "ผู้เล่นระดับสูงรู้ว่า <strong>'สู้ในจังหวะที่ได้เปรียบ'</strong> สำคัญกว่าการสู้ทุกครั้ง — 5 นัดไม่พอกับศัตรูหลายคน การถอยแล้วรอจังหวะจะเพิ่มโอกาสชนะมหาศาล"
+    },
+    {
+      q: "⚔️ MOBA · ทีมกำลังเลือกตัวละคร คู่แข่งเลือก Carry ที่แข็งช่วงกลางเกม — คุณควรเลือก?",
+      opts: [
+        {text:"เลือกตัวที่ตัวเองถนัดที่สุด ไม่สนใจทีม", correct:false},
+        {text:"เลือกตัวที่ Early Game แข็ง เพื่อกดดันก่อนเขาขึ้น", correct:true},
+        {text:"เลือกตัวที่ Late Game แข็งเหมือนกัน สู้ยาว ๆ", correct:false}
+      ],
+      explain: "นี่คือ <strong>Draft + Timing</strong> — ถ้าเขาแข็งช่วงกลาง เราต้องเข้าไปกดดันก่อนเขาขึ้น หรือเลือกตัวที่ Counter ช่วงเวลานั้นได้ การ 'เล่นตัวที่ถนัด' โดยไม่สนใจทีม คือ mindset ของระดับเริ่มต้น"
+    },
+    {
+      q: "♠ Poker · คุณมีไพ่ Flush Draw (อีก 1 ใบได้ฟลัช) · Pot = 100 · คู่แข่ง bet 40 — ควร call?",
+      opts: [
+        {text:"Fold — ยังไม่ได้ฟลัช เสี่ยงเกินไป", correct:false},
+        {text:"Call — เพราะ Pot Odds ดีกว่าโอกาสได้ฟลัช", correct:true},
+        {text:"Raise all-in — กดดันคู่แข่ง", correct:false}
+      ],
+      explain: "โอกาสได้ฟลัช ≈ 19% · ต้อง call 40 เพื่อชิง pot ที่มี 100+40=140 · <strong>Pot Odds = 40/180 ≈ 22%</strong> ซึ่งมากกว่าโอกาสชนะ — แปลว่า call คุ้มในระยะยาว (EV บวก) ผู้เล่นระดับสูงคำนวณแบบนี้ในหัวทันที"
+    },
+    {
+      q: "♚ Chess · คุณเหลือเวลา 30 วินาที คู่แข่งเหลือ 5 นาที ในตำแหน่งที่คุณได้เปรียบเล็กน้อย — ควร?",
+      opts: [
+        {text:"พยายามหาท่าเดินที่ดีที่สุดอย่างระมัดระวัง", correct:false},
+        {text:"เลือกการเดินที่เซฟที่สุด ไม่พลาดก่อนหมดเวลา", correct:true},
+        {text:"ไปเร็ว ๆ แล้วกดดันคู่แข่งด้วย complications", correct:false}
+      ],
+      explain: "<strong>เวลาเป็นทรัพยากร</strong> — ในสถานการณ์นี้เซฟเป็นหลัก เพราะคู่แข่งมีเวลามากกว่าเยอะ ถ้าเล่น complication ขึ้นเสี่ยงเดินพลาด การยืนตำแหน่งได้เปรียบไว้แล้วให้คู่แข่งใช้เวลาตัวเองคิด คือเกม clock management ระดับสูง"
+    }
+  ];
+
+  let gsIdx = 0;
+  const gsCounter = document.getElementById('gsCounter');
+  const gsQuestion = document.getElementById('gsQuestion');
+  const gsAnswers = document.getElementById('gsAnswers');
+  const gsFeedback = document.getElementById('gsFeedback');
+  const gsNext = document.getElementById('gsNext');
+
+  function renderGS(){
+    const s = gsScenarios[gsIdx];
+    gsCounter.innerHTML = `สถานการณ์ที่ <span style="color:var(--accent)">${gsIdx+1}</span>/${gsScenarios.length}`;
+    gsQuestion.innerHTML = s.q;
+    gsAnswers.innerHTML = s.opts.map((o,i)=>`
+      <button class="gs-answer" data-correct="${o.correct}" data-idx="${i}">${o.text}</button>
+    `).join('');
+    gsFeedback.classList.remove('show');
+    gsNext.style.display = 'none';
+
+    document.querySelectorAll('.gs-answer').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const correct = btn.dataset.correct === 'true';
+        document.querySelectorAll('.gs-answer').forEach(b=>{
+          b.disabled = true;
+          if(b.dataset.correct === 'true') b.classList.add('correct');
+          else if(b === btn) b.classList.add('wrong');
+        });
+        gsFeedback.innerHTML = `<strong>${correct?'✓ ถูกต้อง!':'✗ ลองใหม่ครั้งหน้า'}</strong><br><br>${s.explain}`;
+        gsFeedback.style.borderLeftColor = correct ? 'var(--success)' : 'var(--accent)';
+        gsFeedback.classList.add('show');
+        gsNext.style.display = gsIdx < gsScenarios.length-1 ? 'inline-block' : 'none';
+        if(gsIdx === gsScenarios.length-1){
+          gsFeedback.innerHTML += '<br><br><strong style="color:var(--accent)">🏆 คุณทำครบแล้ว! ลองใหม่ได้โดยรีเฟรชหน้า</strong>';
+        }
+      });
+    });
+  }
+  gsNext.addEventListener('click',()=>{
+    if(gsIdx < gsScenarios.length-1){gsIdx++;renderGS()}
+  });
+  renderGS();
+
+  // ===== SCHEDULE TABS =====
+  document.querySelectorAll('.sched-tab').forEach(tab=>{
+    tab.addEventListener('click',()=>{
+      const t = tab.dataset.sched;
+      document.querySelectorAll('.sched-tab').forEach(x=>x.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelectorAll('.sched-content').forEach(c=>{
+        c.classList.toggle('active',c.dataset.sched===t);
+      });
+    });
+  });
+
+  // ===== CHECKLIST =====
+  const checkItems = [
+    {text:"วอร์มอัปร่างกาย · ยืดคอ-ไหล่-ข้อมือ 5 นาที", tag:"skill"},
+    {text:"ทำสมาธิ / หายใจลึก ๆ 2-3 นาที ก่อนเปิดเกม", tag:"mind"},
+    {text:"ฝึก Aim / Last Hit / Puzzle 15-30 นาที", tag:"skill"},
+    {text:"ทบทวน Meta ปัจจุบัน · อ่านแพทช์โน้ตล่าสุด", tag:"know"},
+    {text:"ตั้งเป้าหมายของ session นี้ (เช่น ฝึก hero ใหม่ / แก้ weakness)", tag:"mind"},
+    {text:"ดื่มน้ำให้เพียงพอ · เตรียมของว่าง (หลีกเลี่ยงพลังงานต่ำ)", tag:"skill"},
+    {text:"ตั้งเวลาเล่น / กำหนดจำนวนเกม ล่วงหน้า (เช่น 3 เกม)", tag:"mind"},
+    {text:"ปิด notification ต่าง ๆ · โฟกัส", tag:"mind"},
+    {text:"ถ้าแพ้ 2 เกมติด → พัก 10-15 นาที ห้ามเล่นต่อทันที", tag:"mind"},
+    {text:"หลังเล่นเสร็จ · ดู Replay 1 เกมที่แพ้ ก่อนเลิก", tag:"know"}
+  ];
+
+  const checklistItems = document.getElementById('checklistItems');
+  const checkDone = document.getElementById('checkDone');
+  const checkBar = document.getElementById('checkBar');
+  const checkState = new Array(checkItems.length).fill(false);
+
+  const tagLabels = {skill:'SKILL',mind:'MIND',know:'KNOW'};
+
+  function renderChecklist(){
+    checklistItems.innerHTML = checkItems.map((it,i)=>`
+      <div class="check-item ${checkState[i]?'checked':''}" data-idx="${i}">
+        <div class="check-box">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <div class="check-label">${it.text}</div>
+        <div class="check-tag ${it.tag}">${tagLabels[it.tag]}</div>
+      </div>
+    `).join('');
+    const done = checkState.filter(Boolean).length;
+    checkDone.textContent = done;
+    checkBar.style.width = (done/checkItems.length*100)+'%';
+
+    document.querySelectorAll('.check-item').forEach(el=>{
+      el.addEventListener('click',()=>{
+        const i = parseInt(el.dataset.idx);
+        checkState[i] = !checkState[i];
+        renderChecklist();
+      });
+    });
+  }
+  renderChecklist();
+</script>
+</body>
+</html>
